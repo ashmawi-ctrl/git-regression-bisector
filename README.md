@@ -125,7 +125,7 @@ The initial implementation is tracked through:
 - Git integration tests built from a temporary repository
 - GitHub Actions lint and test checks
 - [PR #2](https://github.com/ashmawi-ctrl/git-regression-bisector/pull/2) for the isolated binary search
-- [Issue #3](https://github.com/ashmawi-ctrl/git-regression-bisector/issues/3) for machine-readable reporting and commit context
+- [Issue #3](https://github.com/ashmawi-ctrl/git-regression-bisector/issues/3) → [PR #4](https://github.com/ashmawi-ctrl/git-regression-bisector/pull/4) for machine-readable reporting and commit context
 
 ## Deliberate limitations
 
