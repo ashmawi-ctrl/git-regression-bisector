@@ -33,7 +33,8 @@ def history_repo(tmp_path: Path) -> tuple[Path, str, str, str]:
 
     (repo / "check.py").write_text(
         "from pathlib import Path\n"
-        "raise SystemExit(0 if Path('state.txt').read_text().strip() == 'good' else 1)\n",
+        "state = Path('state.txt').read_text().strip()\n"
+        "raise SystemExit(0 if state == 'good' else 1)\n",
         encoding="utf-8",
     )
     (repo / "state.txt").write_text("good\n", encoding="utf-8")
