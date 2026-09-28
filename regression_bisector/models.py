@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class ProbeResult:
     commit: str
+    subject: str
     command: tuple[str, ...]
     exit_code: int | None
     stdout: str
@@ -19,4 +20,5 @@ class ProbeResult:
 @dataclass(frozen=True)
 class BisectResult:
     first_bad_commit: str
+    first_bad_subject: str
     probes: tuple[ProbeResult, ...]

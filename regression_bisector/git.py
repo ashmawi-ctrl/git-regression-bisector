@@ -21,6 +21,11 @@ def resolve_commit(repo: Path, ref: str) -> str:
     return result.stdout.strip()
 
 
+def commit_subject(repo: Path, commit: str) -> str:
+    result = _git(repo, "show", "-s", "--format=%s", commit)
+    return result.stdout.strip()
+
+
 def first_parent_path(repo: Path, good: str, bad: str) -> tuple[str, ...]:
     ancestor = subprocess.run(
         ["git", "-C", str(repo), "merge-base", "--is-ancestor", good, bad],

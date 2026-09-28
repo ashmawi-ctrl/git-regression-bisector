@@ -3,6 +3,7 @@ import time
 from pathlib import Path
 
 from .git import (
+    commit_subject,
     detached_worktree,
     ensure_git_worktree,
     first_parent_path,
@@ -41,6 +42,7 @@ def run_probe(
         except subprocess.TimeoutExpired as exc:
             return ProbeResult(
                 commit=commit,
+                subject=commit_subject(repo, commit),
                 command=command,
                 exit_code=None,
                 stdout=_as_text(exc.stdout),
@@ -51,6 +53,7 @@ def run_probe(
 
     return ProbeResult(
         commit=commit,
+        subject=commit_subject(repo, commit),
         command=command,
         exit_code=completed.returncode,
         stdout=completed.stdout,
@@ -117,8 +120,10 @@ def bisect_first_bad(
         else:
             high = middle
 
+    first_bad = candidates[low]
     return BisectResult(
-        first_bad_commit=candidates[low],
+        first_bad_commit=first_bad,
+        first_bad_subject=commit_subject(repo_path, first_bad),
         probes=tuple(probe_order),
     )
 
