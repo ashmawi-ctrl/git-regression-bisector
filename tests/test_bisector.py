@@ -85,6 +85,6 @@ def test_rejects_a_bad_revision_that_passes(history_repo) -> None:
         bisect_first_bad(
             repo,
             good_ref=good,
-            bad_ref=good + "^0",
+            bad_ref=f"{first_bad}^",
             command=("python", "check.py"),
         )
