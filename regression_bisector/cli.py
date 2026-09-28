@@ -1,4 +1,5 @@
 import argparse
+import sys
 from pathlib import Path
 
 from .git import GitError
@@ -17,22 +18,25 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--good", required=True)
     parser.add_argument("--bad", required=True)
     parser.add_argument("--timeout", type=float, default=60.0)
-    parser.add_argument(
-        "command",
-        nargs=argparse.REMAINDER,
-        help="Verification command, normally supplied after --.",
-    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
-    command = tuple(args.command)
-    if command and command[0] == "--":
-        command = command[1:]
+    raw_args = list(sys.argv[1:] if argv is None else argv)
+
+    if "--" not in raw_args:
+        print("error: provide a verification command after --")
+        return 2
+
+    separator = raw_args.index("--")
+    parser_args = raw_args[:separator]
+    command = tuple(raw_args[separator + 1 :])
+
     if not command:
         print("error: provide a verification command after --")
         return 2
+
+    args = build_parser().parse_args(parser_args)
 
     try:
         result = bisect_first_bad(
