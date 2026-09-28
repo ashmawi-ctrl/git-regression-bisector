@@ -79,7 +79,7 @@ def test_rejects_a_good_revision_that_already_fails(history_repo) -> None:
 
 
 def test_rejects_a_bad_revision_that_passes(history_repo) -> None:
-    repo, good, _, _ = history_repo
+    repo, good, first_bad, _ = history_repo
 
     with pytest.raises(BisectError, match="known-bad"):
         bisect_first_bad(
