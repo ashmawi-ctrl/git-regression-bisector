@@ -63,6 +63,7 @@ def test_finds_first_bad_commit_without_moving_caller_checkout(
     )
 
     assert result.first_bad_commit == first_bad
+    assert result.first_bad_subject == "introduce regression"
     assert git(repo, "rev-parse", "HEAD") == original_head
     assert len(result.probes) <= 4
 
