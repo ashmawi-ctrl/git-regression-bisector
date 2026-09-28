@@ -1,0 +1,1 @@
+# git-regression-bisector
