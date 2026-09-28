@@ -18,8 +18,8 @@ Rather than repeatedly checking out commits in the caller's working directory, t
 - uses binary search to reduce the number of probes
 - runs every probe in a temporary detached worktree
 - leaves the caller's current checkout unchanged
-- captures exit code, stdout, stderr, duration, and timeout state
-- reports the first failing commit
+- captures exit code, stdout, stderr, duration, timeout state, and commit subject
+- reports the first failing commit with human-readable or JSON output
 
 ## Install
 
@@ -57,6 +57,21 @@ probes: 5
 - 8f42d8d9e0ab fail exit=1 duration=0.284s
 ...
 ```
+
+## JSON reports
+
+For CI artifacts or later incident review:
+
+```bash
+git-regression-bisector . \
+  --good v1.4.0 \
+  --bad main \
+  --format json \
+  --output artifacts/bisect.json \
+  -- python -m pytest tests/test_checkout.py -q
+```
+
+The JSON report preserves the first bad commit, its subject line, probe count, exact command, exit code, timeout state, stdout, stderr, and duration for each evaluated revision.
 
 ## Why temporary worktrees?
 
@@ -109,7 +124,8 @@ The initial implementation is tracked through:
 - branch `feat/first-bad-commit`
 - Git integration tests built from a temporary repository
 - GitHub Actions lint and test checks
-- a reviewable pull request
+- [PR #2](https://github.com/ashmawi-ctrl/git-regression-bisector/pull/2) for the isolated binary search
+- [Issue #3](https://github.com/ashmawi-ctrl/git-regression-bisector/issues/3) for machine-readable reporting and commit context
 
 ## Deliberate limitations
 
@@ -118,17 +134,15 @@ The initial implementation is tracked through:
 - timed-out or unbuildable middle commits stop the search
 - does not clone remote repositories
 - executes a trusted local command; it is not a sandbox for hostile code
-- does not yet emit JSON or Markdown reports
+- does not emit Markdown reports
 
 Those constraints keep the first version small enough to reason about. Merge-heavy history and skipped commits need different search semantics rather than hidden heuristics.
 
 ## Next investigations
 
-- machine-readable reports
 - explicit skip handling for unbuildable commits
 - keep/reuse worktrees for expensive dependency installs
 - optional setup command per revision
-- commit metadata in the final report
 - comparison with native `git bisect run` behavior
 
 ## License
